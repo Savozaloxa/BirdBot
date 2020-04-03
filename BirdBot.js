@@ -19,10 +19,10 @@ client.on('message', message => {
 
     if(message.content.startsWith(`${prefix_help}`)) {
         var help_info = new Discord.MessageEmbed()
-            .setColor(message.member.displayHexColor)
-            .attachFiles('kiwi_base.png')
+          .setColor(message.member.displayHexColor)
+          .attachFiles(path.join(__dirname,base_image))
 	        .setTitle('How to Use BirdBot')
-	        .setAuthor('BirdBot', 'attachment://kiwi_base.png', 'https://discord.js.org')
+	        .setAuthor('BirdBot', 'attachment://' + base_image, 'https://discord.js.org')
 	        .setDescription('Using BirdBot is easy')
         	.setThumbnail('attachment://kiwi_base.png')
 
@@ -48,11 +48,9 @@ client.on('message', message => {
 
         str = str.split(" ")
 
-        if(str[0] == "!win" && str.length == 2){
+        if(str[0] == prefix_win && str.length == 2){
 
-            message.channel.send ("win with colour")
-
-            console.log("message includes colour")
+            console.log("Win message includes colour " + str[1])
 
             str_colour = str[1].toLowerCase()
             str_title = str_colour.charAt(0).toUpperCase() + str_colour.slice(1)
@@ -68,15 +66,14 @@ client.on('message', message => {
             } else {
                 str_win_message = "Colour not found"
             }
-        } else if(str[0] == "!win" && str.length == 1) {
+        } else if(str[0] == prefix_win && str.length == 1) {
 
-            message.channel.send ("win no colour")
+            console.log("Win message does not colour")
 
             str_colour = message.member.displayHexColor
             str_win_message = message.member.displayName + " is the reigning champion! Caw Caw!"
 
             check_icon_exists(message,function(result) {
-                console.log('callback ' + result);
                 if(result == 'false') {
                     console.log("new icon created " + message.member.displayHexColor)
                     create_icon(message)
@@ -121,7 +118,7 @@ function create_icon(message) {
 }
 
 function check_icon_exists(message,callback) {
-    console.log(icons_path)
+    //console.log('Checking for icons in ' + icons_path)
     fs.readdir(icons_path, function (err, files) {
         if (err) {
             console.log(err);
@@ -140,15 +137,15 @@ function check_icon_exists(message,callback) {
             all_names.push(arr_temp[0]); // before the dot
             all_types.push(arr_temp[1]); // after the dot
 
-            console.log(all_names)
+            //console.log(all_names)
         }
 
         if (all_names.includes(message.member.displayHexColor)) {
 
-            console.log('icon exists')
+            //console.log('icon exists')
             callback('true')
         } else {
-            console.log('icon does not exists')
+            //console.log('icon does not exists')
             callback('false')
         }
     });
