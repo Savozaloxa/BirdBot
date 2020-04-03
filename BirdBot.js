@@ -22,7 +22,7 @@ client.on('message', message => {
           .setColor(message.member.displayHexColor)
           .attachFiles(path.join(__dirname,base_image))
 	        .setTitle('How to Use BirdBot')
-	        .setAuthor('BirdBot', 'attachment://kiwi_base.png', 'https://discord.js.org')
+	        .setAuthor('BirdBot', 'attachment://' + base_image, 'https://discord.js.org')
 	        .setDescription('Using BirdBot is easy')
         	.setThumbnail('attachment://kiwi_base.png')
 
