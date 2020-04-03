@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { prefix_win, prefix_help, token } = require('./config.json');
+const { prefix_win, prefix_help, token, base_image } = require('./config.json');
 const client = new Discord.Client();
 const fs = require("fs");
 const Jimp = require('jimp')
@@ -108,9 +108,9 @@ function create_icon(message) {
 
     background_colour = Jimp.cssColorToHex(message.member.displayHexColor)
 
-    Jimp.read(path.join(__dirname,'kiwi_base.png'), (err, kiwi) => {
+    Jimp.read(path.join(__dirname,base_image), (err, image) => {
         if (err) reject(err);
-        kiwi
+        image
             .background(background_colour) // set background alpha colour
             .write(path.join(__dirname,'icons', message.member.displayHexColor + '.jpg'),callback); // save
     });
