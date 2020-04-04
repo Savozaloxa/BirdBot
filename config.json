@@ -1,6 +1,0 @@
-{
-  "token": "YOUR BOT TOKEN GOES HERE",
-  "prefix_win": "!win",
-  "prefix_help": "!help",
-  "base_image": "kiwi_base.png"
-}
