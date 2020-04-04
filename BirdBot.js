@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { prefix_win, prefix_help, token, base_image } = require('./config.json');
+const { prefix_win, prefix_help, token, token_dev, base_image } = require('./config.json');
 const client = new Discord.Client();
 const fs = require("fs");
 const Jimp = require('jimp')
@@ -18,60 +18,65 @@ client.once('ready', () => {
 client.on('message', message => {
 
     if(message.content.startsWith(`${prefix_help}`)) {
-        var help_info = new Discord.MessageEmbed()
-          .setColor(message.member.displayHexColor)
-          .attachFiles(path.join(__dirname,base_image))
-	        .setTitle('How to Use BirdBot')
-	        .setAuthor('BirdBot', 'attachment://' + base_image, 'https://discord.js.org')
-	        .setDescription('Using BirdBot is easy')
-        	.setThumbnail('attachment://kiwi_base.png')
-
-        	.addFields(
-        		{ name: 'Command', value: 'Function' },
-                { name: '!help', value: 'Brings up this help message' },
-                { name: '!win', value: 'Changes the icon to your colour' },
-                { name: '!win [blue, green, grey, orange, purple, red, steel, teal, yellow]', value: 'Changes the icon to the selected colour' },
-
-        	)
-        	.setTimestamp()
-        	.setFooter('hope that helped', 'attachment://kiwi_base.png');
-
-        message.channel.send(help_info)
+        message_help(message)
     }
 
     if(message.content.startsWith(`${prefix_win}`)) {
+        message_win(message)
+    }
 
-        var str = message.content
-        var str_colour = ""
-        var str_title = ""
-        var str_win_message = ""
+})
 
-        str = str.split(" ")
+function message_help(message){
+    var message_help_info = new Discord.MessageEmbed()
+      .setColor(message.member.displayHexColor)
+      .attachFiles(path.join(__dirname,base_image))
+        .setTitle('How to Use BirdBot')
+        .setAuthor('BirdBot', 'attachment://' + base_image, 'https://discord.js.org')
+        .setDescription('Using BirdBot is easy')
+        .setThumbnail('attachment://kiwi_base.png')
 
-        if(str[0] == prefix_win && str.length == 2){
+        .addFields(
+            { name: 'Command', value: 'Function' },
+            { name: '!help', value: 'Brings up this help message' },
+            { name: '!win', value: 'Changes the icon to your colour' },
+            { name: '!win [blue, green, grey, orange, purple, red, steel, teal, yellow]', value: 'Changes the icon to the selected colour' },
 
-            console.log("Win message includes colour " + str[1])
+        )
+        .setTimestamp()
+        .setFooter('hope that helped', 'attachment://kiwi_base.png');
 
-            str_colour = str[1].toLowerCase()
-            str_title = str_colour.charAt(0).toUpperCase() + str_colour.slice(1)
+    message.channel.send(help_info)
+}
 
-            console.log(str_colour)
+function message_win(message){
 
-            if (n = icons.includes(str_colour)) {
+    var str = message.content
+    var str_colour = ""
+    var str_title = ""
+    var str_win_message = ""
 
-                change_icon(message,str_colour)
+    str = str.split(" ")
 
-                str_win_message = str_title + " is the reigning champion! Caw Caw!"
+    if(str[0] == prefix_win && str.length == 2){
 
-            } else {
-                str_win_message = "Colour not found"
-            }
-        } else if(str[0] == prefix_win && str.length == 1) {
+        console.log("Win message includes colour " + str[1])
 
-            console.log("Win message does not colour")
+        str_colour = str[1].toLowerCase()
+        str_title = str_colour.charAt(0).toUpperCase() + str_colour.slice(1)
 
-            str_colour = message.member.displayHexColor
-            str_win_message = message.member.displayName + " is the reigning champion! Caw Caw!"
+        if (n = icons.includes(str_colour)) {
+
+            change_icon(message,str_colour)
+
+            str_win_message = str_title + " is the reigning champion! Caw Caw!"
+
+        } else {
+            str_win_message = "Colour not found"
+        }
+    } else if(str[0] == prefix_win && str.length == 1) {
+
+        console.log("Win message does not include colour")
 
             check_icon_exists(message,function(result) {
                 if(result == 'false') {
@@ -82,16 +87,40 @@ client.on('message', message => {
                 }
             });
 
-        } else {
-            str_win_message = "error"
-        }
+        check_icon_exists(message,function(result) {
+            if(result == 'false') {
+                console.log("new icon created " + message.member.displayHexColor)
+                create_icon(message)
+            } else {
+                change_icon(message,str_colour)
+            }
+        });
 
-        message.channel.send(str_win_message)
+    } else {
+        str_win_message = "error"
     }
 
+    var message_win_info = new Discord.MessageEmbed()
+      .setColor(message.member.displayHexColor)
+      .attachFiles(path.join(__dirname,base_image))
+        .setTitle('How to Use BirdBot')
+        .setAuthor('BirdBot', 'attachment://' + base_image, 'https://discord.js.org')
+        .setDescription('Using BirdBot is easy')
+        .setThumbnail('attachment://' + base_image)
+
+        .addFields(
+            { name: 'Command', value: 'Function' },
+            { name: '!help', value: 'Brings up this help message' },
+            { name: '!win', value: 'Changes the icon to your colour' },
+            { name: '!win [blue, green, grey, orange, purple, red, steel, teal, yellow]', value: 'Changes the icon to the selected colour' },
+
+        )
+        .setTimestamp()
+        .setFooter('hope that helped', 'attachment://kiwi_base.png');
 
 
-})
+    message.channel.send(str_win_message)
+}
 
 function change_icon(message,file){
 
@@ -151,4 +180,4 @@ function check_icon_exists(message,callback) {
     });
 }
 
-client.login(token);
+client.login(token_dev);
